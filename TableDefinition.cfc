@@ -271,11 +271,22 @@
 		<cfargument name="null" type="boolean" required="no" default="true" hint="whether nulls are allowed">
 		<cfargument name="polymorphic" type="boolean" required="no" default="false" hint="whether or not to create an Id/Type pair of columns for a polymorphic relationship">
 		<cfargument name="foreignKey" type="boolean" required="no" default="true" hint="whether or not to create a foreign key constraint">
+		<cfargument name="columnNames" type="string" required="no" default="" hint="override the default column names">
 		<cfscript>
 		var loc = {};
 		loc.iEnd = ListLen(arguments.referenceNames);
+		loc.columnNamesLen = ListLen(arguments.columnNames);
 		for (loc.i=1; loc.i <= loc.iEnd; loc.i++) {
 			loc.referenceName = ListGetAt(arguments.referenceNames,loc.i);
+			
+			// check for custom column name
+			if(loc.columnNamesLen >= loc.i) {
+				loc.columnName = ListGetAt(arguments.columnNames, loc.i);
+				loc.columnNamePoly = loc.columnName & "type";
+			} else {
+				loc.columnName = loc.referenceName & "id";
+				loc.columnNamePoly = loc.referenceName & "type";
+			}
 			
 			// get all possible arguments for the column
 			loc.columnArgs = {};
@@ -287,14 +298,14 @@
 			if (!StructKeyExists(loc.columnArgs, "columnType"))
 				loc.columnArgs.columnType = "integer";
 			
-			column(columnName = loc.referenceName & "id", argumentCollection=loc.columnArgs);
+			column(columnName = loc.columnName, argumentCollection=loc.columnArgs);
 			
 			if(arguments.polymorphic)
-				column(columnName=loc.referenceName & "type",columnType="string");
+				column(columnName=loc.columnNamePoly,columnType="string");
 			
 			if(arguments.foreignKey && !arguments.polymorphic) {
 				loc.referenceTable = pluralize(loc.referenceName);
-				loc.foreignKey = CreateObject("component","ForeignKeyDefinition").init(adapter=this.adapter,table=this.name,referenceTable=loc.referenceTable,column="#loc.referenceName#id",referenceColumn="id");
+				loc.foreignKey = CreateObject("component","ForeignKeyDefinition").init(adapter=this.adapter,table=this.name,referenceTable=loc.referenceTable,column=loc.columnName,referenceColumn="id");
 				ArrayAppend(this.foreignKeys,loc.foreignKey);
 			}
 		}

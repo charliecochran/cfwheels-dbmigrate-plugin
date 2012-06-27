@@ -16,7 +16,7 @@
 				this[loc.argumentName] = arguments[loc.argumentName];
 			}
 		}
-		this.name = "FK_#LCase(this.table)#_#LCase(this.referenceTable)#";
+		this.name = "FK_#LCase(this.table)#_#LCase(this.column)#_#LCase(this.referenceTable)#_#LCase(this.referenceColumn)#";
 		</cfscript>
 		<cfreturn this>
 	</cffunction>
