@@ -276,6 +276,8 @@
 		var loc = {};
 		loc.iEnd = ListLen(arguments.referenceNames);
 		loc.columnNamesLen = ListLen(arguments.columnNames);
+		loc.args = ListToArray("columnType,default,null,limit,precision,scale");
+		loc.argsLen = ArrayLen(loc.args);
 		for (loc.i=1; loc.i <= loc.iEnd; loc.i++) {
 			loc.referenceName = ListGetAt(arguments.referenceNames,loc.i);
 			
@@ -290,9 +292,11 @@
 			
 			// get all possible arguments for the column
 			loc.columnArgs = {};
-			for (loc.arg in ListToArray("columnType,default,null,limit,precision,scale"))
-				if (StructKeyExists(arguments, loc.arg))
+			for(loc.arg = 1; loc.arg<=loc.argsLen; loc.arg++) {
+				if (StructKeyExists(arguments, loc.arg)) {
 					loc.columnArgs[loc.arg] = arguments[loc.arg];
+				}
+			}
 			
 			// default the column to an integer if not provided
 			if (!StructKeyExists(loc.columnArgs, "columnType"))

@@ -140,10 +140,11 @@
 		<cfargument name="referenceTable" type="string" required="true" hint="reference table name">
 		<cfargument name="column" type="string" required="true" hint="column name">
 		<cfargument name="referenceColumn" type="string" required="true" hint="reference column name">
+		<cfset var loc = {} />
 		<cfscript>
-		var foreignKey = loc.foreignKey = CreateObject("component","ForeignKeyDefinition").init(adapter=this.adapter, argumentCollection=arguments);
-		$execute(this.adapter.addForeignKeyToTable(name=arguments.table, foreignKey=foreignKey));
-		announce("Added foreign key #foreignKey.name#");
+		loc.foreignKey = CreateObject("component","ForeignKeyDefinition").init(adapter=this.adapter, argumentCollection=arguments);
+		$execute(this.adapter.addForeignKeyToTable(name=arguments.table, foreignKey=loc.foreignKey));
+		announce("Added foreign key #loc.foreignKey.name#");
 		</cfscript>
 	</cffunction>
 
