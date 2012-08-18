@@ -293,8 +293,8 @@
 			// get all possible arguments for the column
 			loc.columnArgs = {};
 			for(loc.arg = 1; loc.arg<=loc.argsLen; loc.arg++) {
-				if (StructKeyExists(arguments, loc.arg)) {
-					loc.columnArgs[loc.arg] = arguments[loc.arg];
+				if (StructKeyExists(arguments, loc.args[loc.arg])) {
+					loc.columnArgs[loc.args[loc.arg]] = arguments[loc.args[loc.arg]];
 				}
 			}
 			
